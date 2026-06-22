@@ -16,31 +16,55 @@ class HomeScreen extends StatelessWidget {
         child: Stack(
           children: [
             const CozySpaceView(),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const CatView(),
 
-                    const SizedBox(height: 36),
+            // LayoutBuilder нужен, чтобы аккуратно менять отступы
+            // на маленьких и высоких экранах без скролла.
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final isCompactHeight = constraints.maxHeight < 720;
 
-                    const TimerView(timeText: '25:00'),
+                final horizontalPadding = constraints.maxWidth < 380
+                    ? 20.0
+                    : 24.0;
 
-                    const SizedBox(height: 28),
+                final catTimerGap = isCompactHeight ? 24.0 : 36.0;
+                final timerButtonGap = isCompactHeight ? 22.0 : 28.0;
+                final buttonCounterGap = isCompactHeight ? 14.0 : 20.0;
 
-                    PrimaryActionButton(
-                      text: 'START',
-                      onPressed: () {},
-                    ),
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                  ),
+                  child: Column(
+                    children: [
+                      const Spacer(),
 
-                    const SizedBox(height: 20),
+                      const CatView(),
 
-                    const SessionCounterView(completedSessionsToday: 0),
-                  ],
-                ),
-              ),
+                      SizedBox(height: catTimerGap),
+
+                      const TimerView(timeText: '25:00'),
+
+                      SizedBox(height: timerButtonGap),
+
+                      PrimaryActionButton(
+                        text: 'START',
+                        onPressed: () {},
+                      ),
+
+                      SizedBox(height: buttonCounterGap),
+
+                      const SessionCounterView(
+                        completedSessionsToday: 0,
+                      ),
+
+                      // Нижний Spacer чуть меньше верхнего, чтобы композиция
+                      // визуально стояла ближе к рабочему столу, а не висела в воздухе.
+                      const Spacer(flex: 2),
+                    ],
+                  ),
+                );
+              },
             ),
           ],
         ),
