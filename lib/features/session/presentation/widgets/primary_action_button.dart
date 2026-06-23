@@ -35,6 +35,7 @@ class PrimaryActionButton extends StatelessWidget {
         width: double.infinity,
         height: 60,
         child: ElevatedButton(
+          // В этом коммите кнопка не запускает настоящую Pomodoro-сессию.
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.accentWarm,

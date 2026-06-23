@@ -68,6 +68,12 @@ class CozySpaceView extends StatelessWidget {
           child: _Lamp(),
         ),
 
+        // Placeholder Рио. Это не CatState и не анимация, а временная визуальная заглушка.
+        const Align(
+          alignment: Alignment(0, -0.18),
+          child: _RioPlaceholder(),
+        ),
+
         // Нижняя поверхность стола, на которой визуально живёт сцена.
         const Positioned(
           left: 0,
@@ -86,6 +92,42 @@ class CozySpaceView extends StatelessWidget {
         // Мягкое размытие поверх фона, чтобы декор не спорил с таймером.
         const _SoftVignette(),
       ],
+    );
+  }
+}
+
+class _RioPlaceholder extends StatelessWidget {
+  const _RioPlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: Container(
+        width: 152,
+        height: 152,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: AppColors.surfaceDark.withValues(alpha: 0.72),
+          borderRadius: BorderRadius.circular(42),
+          border: Border.all(
+            color: AppColors.textPrimary.withValues(alpha: 0.08),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.22),
+              blurRadius: 28,
+              offset: const Offset(0, 14),
+            ),
+          ],
+        ),
+        child: const Text(
+          '🐈',
+          style: TextStyle(
+            fontSize: 82,
+            height: 1,
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'widgets/cat_view.dart';
 import 'widgets/cozy_space_view.dart';
 import 'widgets/primary_action_button.dart';
-import 'widgets/session_counter_view.dart';
 import 'widgets/timer_view.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -15,10 +13,10 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
+            // Уютная зона отвечает за атмосферу экрана и placeholder Рио.
             const CozySpaceView(),
 
-            // LayoutBuilder нужен, чтобы аккуратно менять отступы
-            // на маленьких и высоких экранах без скролла.
+            // LayoutBuilder нужен только для базовой адаптивности MVP.
             LayoutBuilder(
               builder: (context, constraints) {
                 final isCompactHeight = constraints.maxHeight < 720;
@@ -27,9 +25,9 @@ class HomeScreen extends StatelessWidget {
                     ? 20.0
                     : 24.0;
 
-                final catTimerGap = isCompactHeight ? 24.0 : 36.0;
+                final topSpacerFlex = isCompactHeight ? 3 : 4;
+                final bottomSpacerFlex = isCompactHeight ? 2 : 3;
                 final timerButtonGap = isCompactHeight ? 22.0 : 28.0;
-                final buttonCounterGap = isCompactHeight ? 14.0 : 20.0;
 
                 return Padding(
                   padding: EdgeInsets.symmetric(
@@ -37,11 +35,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      const Spacer(),
-
-                      const CatView(),
-
-                      SizedBox(height: catTimerGap),
+                      Spacer(flex: topSpacerFlex),
 
                       const TimerView(timeText: '25:00'),
 
@@ -49,18 +43,11 @@ class HomeScreen extends StatelessWidget {
 
                       PrimaryActionButton(
                         text: 'START',
+                        // В рамках MVP кнопка только нажимается, но не запускает таймер.
                         onPressed: () {},
                       ),
 
-                      SizedBox(height: buttonCounterGap),
-
-                      const SessionCounterView(
-                        completedSessionsToday: 0,
-                      ),
-
-                      // Нижний Spacer чуть меньше верхнего, чтобы композиция
-                      // визуально стояла ближе к рабочему столу, а не висела в воздухе.
-                      const Spacer(flex: 2),
+                      Spacer(flex: bottomSpacerFlex),
                     ],
                   ),
                 );
