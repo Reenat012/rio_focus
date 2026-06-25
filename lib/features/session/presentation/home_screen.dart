@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'widgets/cat_view.dart';
 import 'widgets/cozy_space_view.dart';
 import 'widgets/primary_action_button.dart';
 import 'widgets/timer_view.dart';
@@ -13,7 +14,7 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            // Уютная зона отвечает за атмосферу экрана и placeholder Рио.
+            // Уютная зона отвечает только за атмосферу экрана.
             const CozySpaceView(),
 
             // LayoutBuilder нужен только для базовой адаптивности MVP.
@@ -28,7 +29,7 @@ class HomeScreen extends StatelessWidget {
                 final topSpacerFlex = isCompactHeight ? 2 : 3;
                 final bottomSpacerFlex = isCompactHeight ? 2 : 3;
 
-                // Отступ между Рио и таймером нужен, чтобы карточки не слипались.
+                // Отступ между Рио и таймером нужен, чтобы элементы не слипались.
                 final catTimerGap = isCompactHeight ? 18.0 : 24.0;
                 final timerButtonGap = isCompactHeight ? 22.0 : 28.0;
 
@@ -40,12 +41,12 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       Spacer(flex: topSpacerFlex),
 
-                      // Рио находится в основной композиции экрана,
-                      // поэтому таймер больше не может налезть на котика.
-                      const _RioPlaceholder(),
+                      // Рио теперь имеет собственный компонент.
+                      const CatView(),
 
                       SizedBox(height: catTimerGap),
 
+                      // Пока таймер остаётся статичным.
                       const TimerView(timeText: '25:00'),
 
                       SizedBox(height: timerButtonGap),
@@ -63,43 +64,6 @@ class HomeScreen extends StatelessWidget {
               },
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _RioPlaceholder extends StatelessWidget {
-  const _RioPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: Container(
-        width: 132,
-        height: 132,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          // Карточка Рио остаётся тёплой и мягкой, но теперь она компактнее.
-          color: const Color(0xFF2B2420).withValues(alpha: 0.72),
-          borderRadius: BorderRadius.circular(38),
-          border: Border.all(
-            color: const Color(0xFFF5E9D7).withValues(alpha: 0.08),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.20),
-              blurRadius: 22,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: const Text(
-          '🐈',
-          style: TextStyle(
-            fontSize: 72,
-            height: 1,
-          ),
         ),
       ),
     );

@@ -7,67 +7,90 @@ class CatView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 184,
-      height: 184,
-      decoration: BoxDecoration(
-        // Мягкая тёплая подложка, чтобы котик был частью сцены, а не случайным emoji.
-        color: AppColors.surfaceDark.withValues(alpha: 0.82),
-        borderRadius: BorderRadius.circular(48),
-        border: Border.all(
-          color: AppColors.accentWarm.withValues(alpha: 0.16),
-        ),
-        boxShadow: [
-          BoxShadow(
-            // Тень под котиком визуально ставит его на поверхность сцены.
-            color: Colors.black.withValues(alpha: 0.28),
-            blurRadius: 28,
-            offset: const Offset(0, 16),
-          ),
-          BoxShadow(
-            // Лёгкое тёплое свечение связывает котика с общей атмосферой.
-            color: AppColors.accentWarm.withValues(alpha: 0.12),
-            blurRadius: 34,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Внутреннее мягкое пятно делает подложку менее плоской.
-          Container(
-            width: 132,
-            height: 132,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.backgroundDark.withValues(alpha: 0.36),
-            ),
-          ),
-
-          // Временный fallback-котик.
-          // Позже заменим на PNG/WebP, Rive или Lottie, но экран уже не зависит от assets.
-          const Text(
-            '🐈',
-            style: TextStyle(
-              fontSize: 92,
-              height: 1,
-            ),
-          ),
-
-          // Небольшая "тень" внутри карточки, чтобы котик не висел в воздухе.
-          Positioned(
-            bottom: 34,
-            child: Container(
-              width: 88,
-              height: 12,
+    return IgnorePointer(
+      child: SizedBox(
+        width: 204,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 176,
+              height: 176,
               decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.18),
-                borderRadius: BorderRadius.circular(999),
+                // Тёплая подложка делает место Рио частью вечерней сцены.
+                color: AppColors.surfaceDark.withValues(alpha: 0.86),
+                borderRadius: BorderRadius.circular(52),
+                border: Border.all(
+                  // Мягкая граница отделяет место Рио от фона без лишнего контраста.
+                  color: AppColors.accentWarm.withValues(alpha: 0.20),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    // Основная тень визуально ставит карточку на поверхность сцены.
+                    color: Colors.black.withValues(alpha: 0.28),
+                    blurRadius: 28,
+                    offset: const Offset(0, 16),
+                  ),
+                  BoxShadow(
+                    // Тёплое свечение связывает Рио с общей атмосферой приложения.
+                    color: AppColors.accentWarm.withValues(alpha: 0.16),
+                    blurRadius: 42,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Внутреннее мягкое пятно добавляет глубину, но не спорит с котиком.
+                  Container(
+                    width: 126,
+                    height: 126,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.backgroundDark.withValues(alpha: 0.34),
+                    ),
+                  ),
+
+                  // Временный fallback-котик.
+                  // Позже здесь появится полноценный визуал Рио.
+                  const Text(
+                    '🐈',
+                    style: TextStyle(
+                      fontSize: 88,
+                      height: 1,
+                    ),
+                  ),
+
+                  // Небольшая тень внутри карточки, чтобы котик не висел в воздухе.
+                  Positioned(
+                    bottom: 34,
+                    child: Container(
+                      width: 88,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.18),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+
+            const SizedBox(height: 12),
+
+            Text(
+              'Рио здесь',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                // Подпись тихая: добавляет эмоцию, но не превращает экран в onboarding.
+                color: AppColors.textSecondary.withValues(alpha: 0.82),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
