@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:focus_with_rio/features/session/presentation/widgets/session_counter_view.dart';
 
 import 'widgets/cat_view.dart';
 import 'widgets/cozy_space_view.dart';
@@ -48,6 +49,13 @@ class HomeScreen extends StatelessWidget {
 
                       // Пока таймер остаётся статичным.
                       const TimerView(timeText: '25:00'),
+
+                      const SizedBox(height: 12),
+
+                      // Пока это только UI-заготовка без реального состояния сессии.
+                      const SessionCounterView(
+                        completedSessionsToday: 0,
+                      ),
 
                       SizedBox(height: timerButtonGap),
 
