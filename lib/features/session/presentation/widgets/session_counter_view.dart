@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
+import '../../../../app/ui_tokens.dart';
 
 class SessionCounterView extends StatelessWidget {
   const SessionCounterView({
@@ -16,15 +17,15 @@ class SessionCounterView extends StatelessWidget {
       decoration: BoxDecoration(
         // Счётчик — второстепенный элемент, поэтому подложка очень мягкая.
         color: AppColors.surfaceDark.withValues(alpha: 0.34),
-        borderRadius: BorderRadius.circular(999),
+        borderRadius: BorderRadius.circular(AppRadii.pill),
         border: Border.all(
           color: AppColors.textSecondary.withValues(alpha: 0.08),
         ),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 14,
-          vertical: 8,
+          horizontal: AppSpacing.medium,
+          vertical: AppSpacing.xSmall,
         ),
         child: Text(
           'Сессий сегодня: $completedSessionsToday',

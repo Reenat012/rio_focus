@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
+import '../../../../app/ui_tokens.dart';
 
 class TimerView extends StatelessWidget {
   const TimerView({
@@ -15,13 +16,13 @@ class TimerView extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.symmetric(
           // Чуть больше воздуха под три строки: режим, время и мягкая подпись
-          horizontal: 30,
-          vertical: 18,
+          horizontal: AppSpacing.xxxLarge,
+          vertical: AppSpacing.large,
         ),
         decoration: BoxDecoration(
           // Мягкая подложка отделяет таймер от фона, но не делает его тяжёлой карточкой.
           color: AppColors.surfaceDark.withValues(alpha: 0.46),
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(AppRadii.panel),
           border: Border.all(
             color: AppColors.textPrimary.withValues(alpha: 0.08),
           ),
@@ -29,8 +30,8 @@ class TimerView extends StatelessWidget {
             BoxShadow(
               // Лёгкая тень помогает таймеру читаться на тёплом фоне.
               color: Colors.black.withValues(alpha: 0.18),
-              blurRadius: 24,
-              offset: const Offset(0, 12),
+              blurRadius: AppElevation.softBlur,
+              offset: AppElevation.softOffset,
             ),
           ],
         ),
@@ -48,7 +49,7 @@ class TimerView extends StatelessWidget {
                 letterSpacing: 0.6,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.xSmall),
             Text(
               timeText,
               textAlign: TextAlign.center,
@@ -61,7 +62,7 @@ class TimerView extends StatelessWidget {
                 letterSpacing: 1.2,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSpacing.small),
             const Text(
               'Рио рядом. Можно начинать.',
               textAlign: TextAlign.center,

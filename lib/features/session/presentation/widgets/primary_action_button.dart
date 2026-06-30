@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
+import '../../../../app/ui_tokens.dart';
 
 class PrimaryActionButton extends StatefulWidget {
   const PrimaryActionButton({
@@ -42,7 +43,7 @@ class _PrimaryActionButtonState extends State<PrimaryActionButton> {
         curve: Curves.easeOut,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(26),
+            borderRadius: BorderRadius.circular(AppRadii.control),
             boxShadow: [
               BoxShadow(
                 // Тёплая тень делает START заметным, но не превращает кнопку в неон.
@@ -64,7 +65,7 @@ class _PrimaryActionButtonState extends State<PrimaryActionButton> {
           ),
           child: SizedBox(
             width: double.infinity,
-            height: 64,
+            height: AppSizes.primaryActionHeight,
             child: ElevatedButton(
               // Пока кнопка только нажимается, но не запускает Pomodoro-сессию.
               onPressed: widget.onPressed,
@@ -75,11 +76,11 @@ class _PrimaryActionButtonState extends State<PrimaryActionButton> {
                 shadowColor: Colors.transparent,
                 overlayColor: AppColors.textPrimary.withValues(alpha: 0.10),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(26),
+                  borderRadius: BorderRadius.circular(AppRadii.control),
                 ),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 28,
-                  vertical: 18,
+                  horizontal: AppSpacing.xxLarge,
+                  vertical: AppSpacing.medium,
                 ),
               ),
               child: Text(

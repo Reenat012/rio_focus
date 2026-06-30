@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:focus_with_rio/features/session/presentation/widgets/session_counter_view.dart';
 
+import '../../../app/ui_tokens.dart';
 import 'widgets/cat_view.dart';
 import 'widgets/cozy_space_view.dart';
 import 'widgets/primary_action_button.dart';
@@ -24,15 +25,19 @@ class HomeScreen extends StatelessWidget {
                 final isCompactHeight = constraints.maxHeight < 720;
 
                 final horizontalPadding = constraints.maxWidth < 380
-                    ? 20.0
-                    : 24.0;
+                    ? AppSpacing.large
+                    : AppSpacing.xLarge;
 
                 final topSpacerFlex = isCompactHeight ? 2 : 3;
                 final bottomSpacerFlex = isCompactHeight ? 2 : 3;
 
                 // Отступ между Рио и таймером нужен, чтобы элементы не слипались.
-                final catTimerGap = isCompactHeight ? 18.0 : 24.0;
-                final timerButtonGap = isCompactHeight ? 22.0 : 28.0;
+                final catTimerGap = isCompactHeight
+                    ? AppSpacing.large
+                    : AppSpacing.xLarge;
+                final timerButtonGap = isCompactHeight
+                    ? AppSpacing.xLarge
+                    : AppSpacing.xxLarge;
 
                 return Padding(
                   padding: EdgeInsets.symmetric(
@@ -50,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                       // Пока таймер остаётся статичным.
                       const TimerView(timeText: '25:00'),
 
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSpacing.small),
 
                       // Пока это только UI-заготовка без реального состояния сессии.
                       const SessionCounterView(

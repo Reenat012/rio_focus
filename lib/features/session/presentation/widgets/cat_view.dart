@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
+import '../../../../app/ui_tokens.dart';
 
 class CatView extends StatelessWidget {
   const CatView({super.key});
@@ -9,17 +10,17 @@ class CatView extends StatelessWidget {
   Widget build(BuildContext context) {
     return IgnorePointer(
       child: SizedBox(
-        width: 204,
+        width: AppSizes.catViewWidth,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 176,
-              height: 176,
+              width: AppSizes.catCardSize,
+              height: AppSizes.catCardSize,
               decoration: BoxDecoration(
                 // Тёплая подложка делает место Рио частью вечерней сцены.
                 color: AppColors.surfaceDark.withValues(alpha: 0.86),
-                borderRadius: BorderRadius.circular(52),
+                borderRadius: BorderRadius.circular(AppRadii.character),
                 border: Border.all(
                   // Мягкая граница отделяет место Рио от фона без лишнего контраста.
                   color: AppColors.accentWarm.withValues(alpha: 0.20),
@@ -28,14 +29,14 @@ class CatView extends StatelessWidget {
                   BoxShadow(
                     // Основная тень визуально ставит карточку на поверхность сцены.
                     color: Colors.black.withValues(alpha: 0.28),
-                    blurRadius: 28,
-                    offset: const Offset(0, 16),
+                    blurRadius: AppElevation.raisedBlur,
+                    offset: AppElevation.raisedOffset,
                   ),
                   BoxShadow(
                     // Тёплое свечение связывает Рио с общей атмосферой приложения.
                     color: AppColors.accentWarm.withValues(alpha: 0.16),
-                    blurRadius: 42,
-                    offset: const Offset(0, 8),
+                    blurRadius: AppElevation.glowBlur,
+                    offset: AppElevation.glowOffset,
                   ),
                 ],
               ),
@@ -70,7 +71,7 @@ class CatView extends StatelessWidget {
                       height: 12,
                       decoration: BoxDecoration(
                         color: Colors.black.withValues(alpha: 0.18),
-                        borderRadius: BorderRadius.circular(999),
+                        borderRadius: BorderRadius.circular(AppRadii.pill),
                       ),
                     ),
                   ),
@@ -78,7 +79,7 @@ class CatView extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.small),
 
             Text(
               'Рио здесь',
