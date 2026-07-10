@@ -18,6 +18,19 @@ class SessionController extends Notifier<SessionState> {
       soundEnabled: true,
     );
   }
+
+  void startFocus() {
+    state = SessionState(
+      mode: SessionMode.focus,
+      status: SessionStatus.running,
+      startedAt: null,
+      endsAt: null,
+      pausedRemaining: null,
+      completedSessionsToday: state.completedSessionsToday,
+      totalCompletedSessions: state.totalCompletedSessions,
+      soundEnabled: state.soundEnabled,
+    );
+  }
 }
 
 final sessionControllerProvider =

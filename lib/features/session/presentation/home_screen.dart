@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:focus_with_rio/features/session/presentation/widgets/session_counter_view.dart';
 
 import '../../../app/ui_tokens.dart';
+import '../application/session_controller.dart';
 import 'widgets/cat_view.dart';
 import 'widgets/cozy_space_view.dart';
 import 'widgets/primary_action_button.dart';
 import 'widgets/timer_view.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -40,9 +42,7 @@ class HomeScreen extends StatelessWidget {
                     : AppSpacing.xxLarge;
 
                 return Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: horizontalPadding,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                   child: Column(
                     children: [
                       Spacer(flex: topSpacerFlex),
@@ -58,16 +58,18 @@ class HomeScreen extends StatelessWidget {
                       const SizedBox(height: AppSpacing.small),
 
                       // Пока это только UI-заготовка без реального состояния сессии.
-                      const SessionCounterView(
-                        completedSessionsToday: 0,
-                      ),
+                      const SessionCounterView(completedSessionsToday: 0),
 
                       SizedBox(height: timerButtonGap),
 
                       PrimaryActionButton(
                         text: 'START',
-                        // В рамках MVP кнопка только нажимается, но не запускает таймер.
-                        onPressed: () {},
+                        // Пока меняем только состояние. Отсчёт появится позже.
+                        onPressed: () {
+                          ref
+                              .read(sessionControllerProvider.notifier)
+                              .startFocus();
+                        },
                       ),
 
                       Spacer(flex: bottomSpacerFlex),
