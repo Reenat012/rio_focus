@@ -4,6 +4,8 @@ import 'package:focus_with_rio/features/session/presentation/widgets/session_cou
 
 import '../../../app/ui_tokens.dart';
 import '../application/session_controller.dart';
+import '../domain/session_mode.dart';
+import '../domain/session_status.dart';
 import 'widgets/cat_view.dart';
 import 'widgets/cozy_space_view.dart';
 import 'widgets/primary_action_button.dart';
@@ -14,6 +16,11 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final sessionState = ref.watch(sessionControllerProvider);
+    final isFocusRunning =
+        sessionState.mode == SessionMode.focus &&
+        sessionState.status == SessionStatus.running;
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -52,8 +59,14 @@ class HomeScreen extends ConsumerWidget {
 
                       SizedBox(height: catTimerGap),
 
-                      // Пока таймер остаётся статичным.
-                      const TimerView(timeText: '25:00'),
+                      // Таймер пока статичный, но UI уже реагирует на running state.
+                      TimerView(
+                        timeText: '25:00',
+                        modeLabel: isFocusRunning ? 'Фокус идёт' : 'Фокус',
+                        helperText: isFocusRunning
+                            ? 'Рио спит. Ты в рабочей сессии.'
+                            : 'Рио рядом. Можно начинать.',
+                      ),
 
                       const SizedBox(height: AppSpacing.small),
 
@@ -63,7 +76,7 @@ class HomeScreen extends ConsumerWidget {
                       SizedBox(height: timerButtonGap),
 
                       PrimaryActionButton(
-                        text: 'START',
+                        text: isFocusRunning ? 'FOCUSING' : 'START',
                         // Пока меняем только состояние. Отсчёт появится позже.
                         onPressed: () {
                           ref

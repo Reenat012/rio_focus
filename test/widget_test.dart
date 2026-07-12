@@ -6,7 +6,7 @@ import 'package:focus_with_rio/features/session/domain/session_mode.dart';
 import 'package:focus_with_rio/features/session/domain/session_status.dart';
 
 void main() {
-  testWidgets('START changes session state to running focus', (
+  testWidgets('START shows static running focus UI', (
     WidgetTester tester,
   ) async {
     final container = ProviderContainer();
@@ -38,5 +38,9 @@ void main() {
       container.read(sessionControllerProvider).status,
       SessionStatus.running,
     );
+
+    expect(find.text('Фокус идёт'), findsOneWidget);
+    expect(find.text('Рио спит. Ты в рабочей сессии.'), findsOneWidget);
+    expect(find.text('FOCUSING'), findsOneWidget);
   });
 }
