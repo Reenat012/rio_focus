@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:focus_with_rio/app/app.dart';
@@ -10,37 +11,48 @@ void main() {
     WidgetTester tester,
   ) async {
     final container = ProviderContainer();
-    addTearDown(container.dispose);
 
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: const RioFocusApp(),
-      ),
-    );
+    try {
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const RioFocusApp(),
+        ),
+      );
 
-    expect(find.text('🐈'), findsOneWidget);
-    expect(find.text('25:00'), findsOneWidget);
-    expect(find.text('START'), findsOneWidget);
-    expect(find.text('Сессий сегодня: 0'), findsOneWidget);
+      expect(find.text('🐈'), findsOneWidget);
+      expect(find.text('25:00'), findsOneWidget);
+      expect(find.text('START'), findsOneWidget);
+      expect(find.text('Сессий сегодня: 0'), findsOneWidget);
 
-    expect(container.read(sessionControllerProvider).mode, SessionMode.idle);
-    expect(
-      container.read(sessionControllerProvider).status,
-      SessionStatus.stopped,
-    );
+      expect(container.read(sessionControllerProvider).mode, SessionMode.idle);
+      expect(
+        container.read(sessionControllerProvider).status,
+        SessionStatus.stopped,
+      );
 
-    await tester.tap(find.text('START'));
-    await tester.pump();
+      await tester.tap(find.text('START'));
+      await tester.pump();
 
-    expect(container.read(sessionControllerProvider).mode, SessionMode.focus);
-    expect(
-      container.read(sessionControllerProvider).status,
-      SessionStatus.running,
-    );
+      final runningState = container.read(sessionControllerProvider);
 
-    expect(find.text('Фокус идёт'), findsOneWidget);
-    expect(find.text('Рио спит. Ты в рабочей сессии.'), findsOneWidget);
-    expect(find.text('FOCUSING'), findsOneWidget);
+      expect(runningState.mode, SessionMode.focus);
+      expect(runningState.status, SessionStatus.running);
+      expect(runningState.startedAt, isNotNull);
+      expect(runningState.endsAt, isNotNull);
+      expect(
+        runningState.endsAt!.difference(runningState.startedAt!),
+        const Duration(minutes: 25),
+      );
+
+      // На старте сессии таймер показывает полные 25 минут.
+      expect(find.text('25:00'), findsOneWidget);
+      expect(find.text('Фокус идёт'), findsOneWidget);
+      expect(find.text('Рио спит. Ты в рабочей сессии.'), findsOneWidget);
+      expect(find.text('FOCUSING'), findsOneWidget);
+    } finally {
+      await tester.pumpWidget(const SizedBox.shrink());
+      container.dispose();
+    }
   });
 }

@@ -61,7 +61,7 @@ class HomeScreen extends ConsumerWidget {
 
                       // Таймер пока статичный, но UI уже реагирует на running state.
                       TimerView(
-                        timeText: '25:00',
+                        timeText: _formatTimeText(sessionState.endsAt),
                         modeLabel: isFocusRunning ? 'Фокус идёт' : 'Фокус',
                         helperText: isFocusRunning
                             ? 'Рио спит. Ты в рабочей сессии.'
@@ -96,4 +96,21 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+String _formatTimeText(DateTime? endsAt) {
+  if (endsAt == null) {
+    return '25:00';
+  }
+
+  final remaining = endsAt.difference(DateTime.now());
+  final totalSeconds = remaining.inMilliseconds <= 0
+      ? 0
+      : (remaining.inMilliseconds / 1000).ceil();
+
+  final minutes = totalSeconds ~/ 60;
+  final seconds = totalSeconds % 60;
+
+  return '${minutes.toString().padLeft(2, '0')}:'
+      '${seconds.toString().padLeft(2, '0')}';
 }
