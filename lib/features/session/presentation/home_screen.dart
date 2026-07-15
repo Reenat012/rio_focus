@@ -20,6 +20,9 @@ class HomeScreen extends ConsumerWidget {
     final isFocusRunning =
         sessionState.mode == SessionMode.focus &&
         sessionState.status == SessionStatus.running;
+    final isFocusPaused =
+        sessionState.mode == SessionMode.focus &&
+        sessionState.status == SessionStatus.paused;
 
     return Scaffold(
       body: SafeArea(
@@ -61,9 +64,18 @@ class HomeScreen extends ConsumerWidget {
 
                       // Таймер пока статичный, но UI уже реагирует на running state.
                       TimerView(
-                        timeText: _formatTimeText(sessionState.endsAt),
-                        modeLabel: isFocusRunning ? 'Фокус идёт' : 'Фокус',
-                        helperText: isFocusRunning
+                        timeText: _formatTimeText(
+                          endsAt: sessionState.endsAt,
+                          pausedRemaining: sessionState.pausedRemaining,
+                        ),
+                        modeLabel: isFocusPaused
+                            ? 'Пауза'
+                            : isFocusRunning
+                            ? 'Фокус идёт'
+                            : 'Фокус',
+                        helperText: isFocusPaused
+                            ? 'Рио ждёт. Можно продолжить позже.'
+                            : isFocusRunning
                             ? 'Рио спит. Ты в рабочей сессии.'
                             : 'Рио рядом. Можно начинать.',
                       ),
@@ -76,12 +88,21 @@ class HomeScreen extends ConsumerWidget {
                       SizedBox(height: timerButtonGap),
 
                       PrimaryActionButton(
-                        text: isFocusRunning ? 'FOCUSING' : 'START',
-                        // Пока меняем только состояние. Отсчёт появится позже.
+                        text: isFocusPaused
+                            ? 'PAUSED'
+                            : isFocusRunning
+                            ? 'PAUSE'
+                            : 'START',
                         onPressed: () {
-                          ref
-                              .read(sessionControllerProvider.notifier)
-                              .startFocus();
+                          final controller = ref.read(
+                            sessionControllerProvider.notifier,
+                          );
+
+                          if (isFocusRunning) {
+                            controller.pause();
+                          } else if (!isFocusPaused) {
+                            controller.startFocus();
+                          }
                         },
                       ),
 
@@ -98,15 +119,27 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-String _formatTimeText(DateTime? endsAt) {
+String _formatTimeText({
+  required DateTime? endsAt,
+  required Duration? pausedRemaining,
+}) {
+  if (pausedRemaining != null) {
+    return _formatDuration(pausedRemaining);
+  }
+
   if (endsAt == null) {
     return '25:00';
   }
 
   final remaining = endsAt.difference(DateTime.now());
-  final totalSeconds = remaining.inMilliseconds <= 0
+
+  return _formatDuration(remaining);
+}
+
+String _formatDuration(Duration duration) {
+  final totalSeconds = duration.inMilliseconds <= 0
       ? 0
-      : (remaining.inMilliseconds / 1000).ceil();
+      : (duration.inMilliseconds / 1000).ceil();
 
   final minutes = totalSeconds ~/ 60;
   final seconds = totalSeconds % 60;

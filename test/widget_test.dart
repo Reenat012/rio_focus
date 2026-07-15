@@ -7,7 +7,7 @@ import 'package:focus_with_rio/features/session/domain/session_mode.dart';
 import 'package:focus_with_rio/features/session/domain/session_status.dart';
 
 void main() {
-  testWidgets('START shows static running focus UI', (
+  testWidgets('START starts focus and PAUSE pauses it', (
     WidgetTester tester,
   ) async {
     final container = ProviderContainer();
@@ -49,7 +49,24 @@ void main() {
       expect(find.text('25:00'), findsOneWidget);
       expect(find.text('Фокус идёт'), findsOneWidget);
       expect(find.text('Рио спит. Ты в рабочей сессии.'), findsOneWidget);
-      expect(find.text('FOCUSING'), findsOneWidget);
+      expect(find.text('PAUSE'), findsOneWidget);
+
+      await tester.tap(find.text('PAUSE'));
+      await tester.pump();
+
+      final pausedState = container.read(sessionControllerProvider);
+
+      expect(pausedState.mode, SessionMode.focus);
+      expect(pausedState.status, SessionStatus.paused);
+      expect(pausedState.startedAt, runningState.startedAt);
+      expect(pausedState.endsAt, isNull);
+      expect(pausedState.pausedRemaining, isNotNull);
+
+      // Сразу после паузы на экране остаётся почти полная сессия.
+      expect(find.text('25:00'), findsOneWidget);
+      expect(find.text('Пауза'), findsOneWidget);
+      expect(find.text('Рио ждёт. Можно продолжить позже.'), findsOneWidget);
+      expect(find.text('PAUSED'), findsOneWidget);
     } finally {
       await tester.pumpWidget(const SizedBox.shrink());
       container.dispose();
