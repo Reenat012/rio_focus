@@ -7,7 +7,7 @@ import 'package:focus_with_rio/features/session/domain/session_mode.dart';
 import 'package:focus_with_rio/features/session/domain/session_status.dart';
 
 void main() {
-  testWidgets('START, PAUSE and RESUME update focus session state', (
+  testWidgets('START, PAUSE, RESUME and STOP update focus session state', (
     WidgetTester tester,
   ) async {
     final container = ProviderContainer();
@@ -24,6 +24,7 @@ void main() {
       expect(find.text('25:00'), findsOneWidget);
       expect(find.text('START'), findsOneWidget);
       expect(find.text('Сессий сегодня: 0'), findsOneWidget);
+      expect(find.text('STOP'), findsNothing);
 
       expect(container.read(sessionControllerProvider).mode, SessionMode.idle);
       expect(
@@ -50,6 +51,7 @@ void main() {
       expect(find.text('Фокус идёт'), findsOneWidget);
       expect(find.text('Рио спит. Ты в рабочей сессии.'), findsOneWidget);
       expect(find.text('PAUSE'), findsOneWidget);
+      expect(find.text('STOP'), findsOneWidget);
 
       await tester.tap(find.text('PAUSE'));
       await tester.pump();
@@ -67,6 +69,7 @@ void main() {
       expect(find.text('Пауза'), findsOneWidget);
       expect(find.text('Рио ждёт. Можно продолжить позже.'), findsOneWidget);
       expect(find.text('RESUME'), findsOneWidget);
+      expect(find.text('STOP'), findsOneWidget);
 
       final pausedRemaining = pausedState.pausedRemaining;
 
@@ -85,6 +88,24 @@ void main() {
       expect(find.text('Фокус идёт'), findsOneWidget);
       expect(find.text('Рио спит. Ты в рабочей сессии.'), findsOneWidget);
       expect(find.text('PAUSE'), findsOneWidget);
+      expect(find.text('STOP'), findsOneWidget);
+
+      await tester.tap(find.text('STOP'));
+      await tester.pump();
+
+      final stoppedState = container.read(sessionControllerProvider);
+
+      expect(stoppedState.mode, SessionMode.idle);
+      expect(stoppedState.status, SessionStatus.stopped);
+      expect(stoppedState.startedAt, isNull);
+      expect(stoppedState.endsAt, isNull);
+      expect(stoppedState.pausedRemaining, isNull);
+
+      expect(find.text('25:00'), findsOneWidget);
+      expect(find.text('Фокус'), findsOneWidget);
+      expect(find.text('Рио рядом. Можно начинать.'), findsOneWidget);
+      expect(find.text('START'), findsOneWidget);
+      expect(find.text('STOP'), findsNothing);
     } finally {
       await tester.pumpWidget(const SizedBox.shrink());
       container.dispose();

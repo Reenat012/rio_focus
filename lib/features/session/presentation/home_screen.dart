@@ -23,6 +23,7 @@ class HomeScreen extends ConsumerWidget {
     final isFocusPaused =
         sessionState.mode == SessionMode.focus &&
         sessionState.status == SessionStatus.paused;
+    final isFocusActive = isFocusRunning || isFocusPaused;
 
     return Scaffold(
       body: SafeArea(
@@ -107,6 +108,16 @@ class HomeScreen extends ConsumerWidget {
                           }
                         },
                       ),
+
+                      if (isFocusActive) ...[
+                        const SizedBox(height: AppSpacing.medium),
+                        TextButton(
+                          onPressed: () {
+                            ref.read(sessionControllerProvider.notifier).stop();
+                          },
+                          child: const Text('STOP'),
+                        ),
+                      ],
 
                       Spacer(flex: bottomSpacerFlex),
                     ],

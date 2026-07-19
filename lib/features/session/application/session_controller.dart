@@ -96,6 +96,25 @@ class SessionController extends Notifier<SessionState> {
     });
   }
 
+  void stop() {
+    if (state.status == SessionStatus.stopped) {
+      return;
+    }
+
+    _ticker?.cancel();
+
+    state = SessionState(
+      mode: SessionMode.idle,
+      status: SessionStatus.stopped,
+      startedAt: null,
+      endsAt: null,
+      pausedRemaining: null,
+      completedSessionsToday: state.completedSessionsToday,
+      totalCompletedSessions: state.totalCompletedSessions,
+      soundEnabled: state.soundEnabled,
+    );
+  }
+
   void _refreshRunningState() {
     if (state.status != SessionStatus.running || state.endsAt == null) {
       return;
