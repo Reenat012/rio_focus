@@ -7,7 +7,7 @@ import 'package:focus_with_rio/features/session/domain/session_mode.dart';
 import 'package:focus_with_rio/features/session/domain/session_status.dart';
 
 void main() {
-  testWidgets('START starts focus and PAUSE pauses it', (
+  testWidgets('START, PAUSE and RESUME update focus session state', (
     WidgetTester tester,
   ) async {
     final container = ProviderContainer();
@@ -66,7 +66,25 @@ void main() {
       expect(find.text('25:00'), findsOneWidget);
       expect(find.text('Пауза'), findsOneWidget);
       expect(find.text('Рио ждёт. Можно продолжить позже.'), findsOneWidget);
-      expect(find.text('PAUSED'), findsOneWidget);
+      expect(find.text('RESUME'), findsOneWidget);
+
+      final pausedRemaining = pausedState.pausedRemaining;
+
+      await tester.tap(find.text('RESUME'));
+      await tester.pump();
+
+      final resumedState = container.read(sessionControllerProvider);
+
+      expect(resumedState.mode, SessionMode.focus);
+      expect(resumedState.status, SessionStatus.running);
+      expect(resumedState.startedAt, runningState.startedAt);
+      expect(resumedState.endsAt, isNotNull);
+      expect(resumedState.pausedRemaining, isNull);
+      expect(pausedRemaining, isNotNull);
+
+      expect(find.text('Фокус идёт'), findsOneWidget);
+      expect(find.text('Рио спит. Ты в рабочей сессии.'), findsOneWidget);
+      expect(find.text('PAUSE'), findsOneWidget);
     } finally {
       await tester.pumpWidget(const SizedBox.shrink());
       container.dispose();

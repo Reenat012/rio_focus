@@ -71,6 +71,31 @@ class SessionController extends Notifier<SessionState> {
     );
   }
 
+  void resume() {
+    if (state.status != SessionStatus.paused || state.pausedRemaining == null) {
+      return;
+    }
+
+    final endsAt = DateTime.now().add(state.pausedRemaining!);
+
+    _ticker?.cancel();
+
+    state = SessionState(
+      mode: state.mode,
+      status: SessionStatus.running,
+      startedAt: state.startedAt,
+      endsAt: endsAt,
+      pausedRemaining: null,
+      completedSessionsToday: state.completedSessionsToday,
+      totalCompletedSessions: state.totalCompletedSessions,
+      soundEnabled: state.soundEnabled,
+    );
+
+    _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
+      _refreshRunningState();
+    });
+  }
+
   void _refreshRunningState() {
     if (state.status != SessionStatus.running || state.endsAt == null) {
       return;

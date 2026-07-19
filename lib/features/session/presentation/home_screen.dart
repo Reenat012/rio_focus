@@ -89,7 +89,7 @@ class HomeScreen extends ConsumerWidget {
 
                       PrimaryActionButton(
                         text: isFocusPaused
-                            ? 'PAUSED'
+                            ? 'RESUME'
                             : isFocusRunning
                             ? 'PAUSE'
                             : 'START',
@@ -100,7 +100,9 @@ class HomeScreen extends ConsumerWidget {
 
                           if (isFocusRunning) {
                             controller.pause();
-                          } else if (!isFocusPaused) {
+                          } else if (isFocusPaused) {
+                            controller.resume();
+                          } else {
                             controller.startFocus();
                           }
                         },
